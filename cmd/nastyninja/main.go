@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lasko/nastyninja"
 	"github.com/caarlos0/spin"
+	"github.com/lasko/nastyninja"
 	"github.com/urfave/cli"
 )
 
@@ -15,8 +15,8 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "nastyninja"
 	app.Version = version
-	app.Author = "Carlos Alexandro Becker (root@carlosbecker.com)"
-	app.Usage = "This is an nastyninja app written in Go"
+	app.Author = "Brandon Height (lasko@nastyninja.net)"
+	app.Usage = "This is a set of microservices written in Go"
 	app.Action = func(c *cli.Context) error {
 		spin := spin.New("\033[36m %s Working...\033[m")
 		spin.Start()
