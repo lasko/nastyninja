@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -33,6 +33,7 @@ func init() {
 // Pages defines a slice of type Page to hold a list of all the pages in data/ dir.
 var Pages = []Page{}
 
+/* CURRENTLY UNUSED.
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 	m := validPath.FindStringSubmatch(r.URL.Path)
 	if m == nil {
@@ -40,7 +41,7 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 		return "", errors.New("Invalid Page Title")
 	}
 	return m[2], nil // The title is the second subexpression
-}
+}*/
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p interface{}) {
 	//err := templates.ExecuteTemplate(w, tmpl+".html", p)
@@ -59,5 +60,7 @@ func main() {
 	for _, r := range routes {
 		http.HandleFunc(r.Path, r.Func)
 	}
-	http.ListenAndServe(":5000", nil)
+	if err := http.ListenAndServe(":5000", nil); err != nil {
+		fmt.Println("Error during HTTP Server initialization", err)
+	}
 }
