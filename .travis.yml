@@ -4,7 +4,6 @@ install: make setup
 script: make ci
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - test -n "$TRAVIS_TAG" && curl -sL http://git.io/goreleaser | bash
 notifications:
   email: false
 repo_token: 74F12kZcd2wHAv9aASZMJw3R70j7bNjdz
