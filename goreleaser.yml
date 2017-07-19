@@ -1,9 +1,0 @@
-build:
-  main: ./cmd/nastyninja/main.go
-  goarch:
-    - amd64
-#brew:
-#  github:
-#    owner: lasko
-#    name: homebrew-tap
-#  folder: Formula

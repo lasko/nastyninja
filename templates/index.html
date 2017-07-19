@@ -1,0 +1,7 @@
+{{ define "title"}}<title>Index Page</title>{{ end }}
+{{ define "body" }}
+<h1>Page Listing</h1>
+  {{ range .}}
+    <a href="/view/{{.Title}}">{{.Title}}</a></br>
+  {{end}}
+{{ end }}
