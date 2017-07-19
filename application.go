@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -52,7 +53,10 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p interface{}) {
 }
 
 func (p *Page) save() error {
-	filename := "data/" + p.Title + ".txt"
+	if p.Title == "" {
+		return errors.New("empty title for page")
+	}
+	filename := DataDirectory + p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 

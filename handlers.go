@@ -14,11 +14,9 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	p, err := getAllPageLinks()
-	if err != nil {
-		return
+	if p, err := getAllPageLinks(DataDirectory); err == nil {
+		renderTemplate(w, "index", p)
 	}
-	renderTemplate(w, "index", p)
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request, title string) {

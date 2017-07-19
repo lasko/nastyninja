@@ -1,9 +1,14 @@
 package main
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+)
+
+// DataDirectory defines the location for our data files
+var DataDirectory = "data/"
 
 func loadPage(title string) (*Page, error) {
-	filename := "data/" + title + ".txt"
+	filename := DataDirectory + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -20,8 +25,8 @@ func pageInPages(p *Page) bool {
 	return false
 }
 
-func getAllPageLinks() ([]Page, error) {
-	fileInfo, err := ioutil.ReadDir("data/")
+func getAllPageLinks(dataDirectory string) ([]Page, error) {
+	fileInfo, err := ioutil.ReadDir(dataDirectory)
 	if err != nil {
 		return nil, err
 	}

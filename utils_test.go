@@ -23,21 +23,28 @@ func TestLoadNonExistingPage(t *testing.T) {
 	}
 }
 
-func TestGetAllPages(t *testing.T) {
+func TestGetAllPagesNoError(t *testing.T) {
 	// getAllPageLinks will fill in the []Pages struct slice.
-	p, err := getAllPageLinks()
+	p, err := getAllPageLinks(DataDirectory)
 	if err != nil {
 		t.Fatalf("expected nil, received %s", err)
 	}
 	if len(p) < 1 {
 		t.Fatalf("expected pages, received 0: %d", len(p))
 	}
+}
 
+func TestGetAllPagesWithError(t *testing.T) {
+	// getAllPageLinks will fill in the []Pages struct slice.
+	_, err := getAllPageLinks("BREAKIT/")
+	if err == nil {
+		t.Fatalf("expected error, received nil - %s", err)
+	}
 }
 
 func TestPageInPagesTrue(t *testing.T) {
 	// getAllPageLinks will fill in the []Pages struct slice.
-	_, err := getAllPageLinks()
+	_, err := getAllPageLinks(DataDirectory)
 	if err != nil {
 		t.Fatalf("expected pages, received error response. %s", err)
 	}
@@ -46,5 +53,4 @@ func TestPageInPagesTrue(t *testing.T) {
 	if !pageInPages(p) {
 		t.Fatalf("expected true, received false. %s", p.Title)
 	}
-
 }
