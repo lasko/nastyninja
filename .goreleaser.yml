@@ -1,9 +1,0 @@
-# .goreleaser.yml
-# Build customization
-builds:
-  - main: application.go handlers.go routes.go utils.go
-    binary: application
-    goos:
-      - linux
-    goarch:
-      - amd64
