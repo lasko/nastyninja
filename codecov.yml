@@ -1,2 +1,13 @@
 codecov:
     token: 72e338e6-2e0b-45b9-a8e5-17fc74680f81
+ignore:
+  - "*.yml"
+  - "*.toml"
+  - "*.lock"
+  - "Makefile"
+  - "*.sh"
+  - "Dockerfile"
+  - "*.txt"
+  - "*.html"
+  - "*.md"
+  - "*_test.go"
