@@ -4,7 +4,6 @@ builds:
   - main: application.go handlers.go routes.go utils.go
     binary: application
     goos:
-      - darwin
       - linux
     goarch:
       - amd64
