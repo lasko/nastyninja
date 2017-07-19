@@ -37,7 +37,11 @@ func TestGetAllPages(t *testing.T) {
 
 func TestPageInPagesTrue(t *testing.T) {
 	// getAllPageLinks will fill in the []Pages struct slice.
-	getAllPageLinks()
+	_, err := getAllPageLinks()
+	if err != nil {
+		t.Fatalf("expected pages, received error response. %s", err)
+	}
+
 	p, _ := loadPage("TestPage")
 	if !pageInPages(p) {
 		t.Fatalf("expected true, received false. %s", p.Title)
