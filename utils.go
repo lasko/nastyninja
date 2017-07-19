@@ -11,7 +11,7 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
-func pageInPages(p Page) bool {
+func pageInPages(p *Page) bool {
 	for _, j := range Pages {
 		if p.Title == j.Title {
 			return true
@@ -27,10 +27,17 @@ func getAllPageLinks() ([]Page, error) {
 	}
 	for _, v := range fileInfo {
 		name := v.Name()
-		p := Page{Title: name[0 : len(name)-4], Body: []byte("")}
+		//p := Page{Title: name[0 : len(name)-4], Body: []byte("")}
+		p := newPage()
+		p.Title, p.Body = name[0:len(name)-4], []byte("")
+
 		if !pageInPages(p) {
-			Pages = append(Pages, p)
+			Pages = append(Pages, *p)
 		}
 	}
 	return Pages, nil
+}
+
+func newPage() *Page {
+	return &Page{Title: "", Body: []byte("")}
 }
