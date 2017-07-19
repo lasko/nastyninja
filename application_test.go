@@ -15,8 +15,11 @@ func TestPageSaveEmptyTitle(t *testing.T) {
 func TestPageSave(t *testing.T) {
 	p := newPage()
 	p.Title = "Testing"
-	defer os.Remove(DataDirectory + p.Title + ".txt")
+
 	if err := p.save(); err != nil {
 		t.Fatalf("expected nil on page save, received %s", err)
+	}
+	if err := os.Remove(DataDirectory + p.Title + ".txt"); err != nil {
+		t.Errorf("expected nil for file removal, received %s", err)
 	}
 }
