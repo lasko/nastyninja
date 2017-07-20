@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -21,5 +22,25 @@ func TestPageSave(t *testing.T) {
 	}
 	if err := os.Remove(DataDirectory + p.Title + ".txt"); err != nil {
 		t.Errorf("expected nil for file removal, received %s", err)
+	}
+}
+
+func TestRenderTemplate(t *testing.T) {
+	index, _ := getAllPageLinks(DataDirectory)
+	view, _ := loadPage("TestPage")
+	edit, _ := loadPage("TestPage")
+	var testPages = []struct {
+		Method string
+		Path   string
+		Tmpl   string
+		P      interface{}
+	}{
+		{"GET", "/", "index", index},
+		{"GET", "/view/TestPage", "view", view},
+		{"GET", "/edit/TestPage", "edit", edit},
+	}
+	for _, test := range testPages {
+		w := httptest.NewRecorder()
+		renderTemplate(w, test.Tmpl, test.P)
 	}
 }

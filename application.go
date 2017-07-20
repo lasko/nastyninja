@@ -45,9 +45,7 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 }*/
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p interface{}) {
-	//err := templates.ExecuteTemplate(w, tmpl+".html", p)
-	err := templates[tmpl+".html"].ExecuteTemplate(w, "base", p)
-	if err != nil {
+	if err := templates[tmpl+".html"].ExecuteTemplate(w, "base", p); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

@@ -24,16 +24,34 @@ func TestIndexHandler(t *testing.T) {
 
 func TestHandlers(t *testing.T) {
 	testTable := map[string]struct {
-		Method string
-		Path   string
+		Method   string
+		Path     string
+		Handler  http.Handler
+		RespCode int
 	}{
 		"View": {
-			Method: "GET",
-			Path:   "/view/TestPage",
+			Method:   "GET",
+			Path:     "/view/TestPage",
+			Handler:  makeHandler(viewHandler),
+			RespCode: http.StatusOK,
 		},
 		"Edit": {
-			Method: "GET",
-			Path:   "/edit/TestPage",
+			Method:   "GET",
+			Path:     "/edit/Test",
+			Handler:  makeHandler(editHandler),
+			RespCode: http.StatusFound,
+		},
+		"EditNew": {
+			Method:   "GET",
+			Path:     "/edit/ThisDoesNotExist",
+			Handler:  makeHandler(editHandler),
+			RespCode: http.StatusFound,
+		},
+		"NewView": {
+			Method:   "GET",
+			Path:     "/view/ThisDoesNotExist",
+			Handler:  makeHandler(viewHandler),
+			RespCode: http.StatusFound,
 		},
 	}
 	for _, test := range testTable {
@@ -53,11 +71,14 @@ func TestHandlers(t *testing.T) {
 
 		handler.ServeHTTP(rr, req)
 
-		if status := rr.Code; status != http.StatusOK {
+		if status := rr.Code; status != test.RespCode {
 			t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 		}
 		if err := os.Remove(DataDirectory + p.Title + ".txt"); err != nil {
 			t.Errorf("expected nil for file removal, received %s", err)
+		}
+		if _, err := os.Stat(DataDirectory + "ThisDoesNotExist.txt"); !os.IsNotExist(err) {
+			_ = os.Remove(DataDirectory + "ThisDoesNotExist.txt")
 		}
 	}
 }

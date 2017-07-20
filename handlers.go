@@ -31,7 +31,8 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 	p, err := loadPage(title)
 	if err != nil {
-		p = &Page{Title: title}
+		p = newPage()
+		p.Title = title
 	}
 	renderTemplate(w, "edit", p)
 }
