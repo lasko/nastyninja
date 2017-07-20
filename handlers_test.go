@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -22,36 +23,44 @@ func TestIndexHandler(t *testing.T) {
 	}
 }
 
+func TestMakeHandler(t *testing.T) {
+	hf := makeHandler(viewHandler)
+	out := reflect.TypeOf(hf).Kind()
+	if out.String() != "func" {
+		t.Errorf("got %v, wanted func", out.String())
+	}
+}
+
 func TestHandlers(t *testing.T) {
 	testTable := map[string]struct {
-		Method   string
-		Path     string
-		Handler  http.Handler
-		RespCode int
+		Method        string
+		Path          string
+		HandlerMethod http.HandlerFunc
+		RespCode      int
 	}{
 		"View": {
-			Method:   "GET",
-			Path:     "/view/TestPage",
-			Handler:  makeHandler(viewHandler),
-			RespCode: http.StatusOK,
+			Method:        "GET",
+			Path:          "/view/TestPage",
+			HandlerMethod: makeHandler(viewHandler),
+			RespCode:      http.StatusOK,
 		},
 		"Edit": {
-			Method:   "GET",
-			Path:     "/edit/Test",
-			Handler:  makeHandler(editHandler),
-			RespCode: http.StatusFound,
-		},
-		"EditNew": {
-			Method:   "GET",
-			Path:     "/edit/ThisDoesNotExist",
-			Handler:  makeHandler(editHandler),
-			RespCode: http.StatusFound,
+			Method:        "GET",
+			Path:          "/edit/Test",
+			HandlerMethod: makeHandler(editHandler),
+			RespCode:      http.StatusOK,
 		},
 		"NewView": {
-			Method:   "GET",
-			Path:     "/view/ThisDoesNotExist",
-			Handler:  makeHandler(viewHandler),
-			RespCode: http.StatusFound,
+			Method:        "GET",
+			Path:          "/view/ThisDoesNotExist",
+			HandlerMethod: makeHandler(viewHandler),
+			RespCode:      http.StatusFound,
+		},
+		"Save": {
+			Method:        "POST",
+			Path:          "/edit/ThisDoesNotExist",
+			HandlerMethod: makeHandler(saveHandler),
+			RespCode:      http.StatusFound,
 		},
 	}
 	for _, test := range testTable {
@@ -63,16 +72,16 @@ func TestHandlers(t *testing.T) {
 
 		req, err := http.NewRequest(test.Method, test.Path, nil)
 		if err != nil {
-			t.Fatal(err)
+			t.Error(err)
 		}
 		rr := httptest.NewRecorder()
 
-		handler := http.HandlerFunc(makeHandler(viewHandler))
+		handler := http.HandlerFunc(test.HandlerMethod)
 
 		handler.ServeHTTP(rr, req)
 
 		if status := rr.Code; status != test.RespCode {
-			t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+			t.Errorf("handler %v returned wrong status code: got %v want %v", test.Path, status, test.RespCode)
 		}
 		if err := os.Remove(DataDirectory + p.Title + ".txt"); err != nil {
 			t.Errorf("expected nil for file removal, received %s", err)

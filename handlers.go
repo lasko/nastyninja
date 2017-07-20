@@ -39,9 +39,9 @@ func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 	body := r.FormValue("body")
-	p := &Page{Title: title, Body: []byte(body)}
-	err := p.save()
-	if err != nil {
+	p := newPage()
+	p.Title, p.Body = title, []byte(body)
+	if err := p.save(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

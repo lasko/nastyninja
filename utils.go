@@ -17,12 +17,14 @@ type User struct {
 var DataDirectory = "data/"
 
 func loadPage(title string) (*Page, error) {
+	p := newPage()
 	filename := DataDirectory + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	return &Page{Title: title, Body: body}, nil
+	p.Title, p.Body = title, body
+	return p, nil
 }
 
 func pageInPages(p *Page) bool {
